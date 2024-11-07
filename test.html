@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descope Redirect Test</title>
+    <!-- Load Descope Web Component -->
+    <script src="https://unpkg.com/@descope/web-component@3.21.0/dist/index.js"></script>
+</head>
+<body>
+
+    <!-- Descope Login Flow Component -->
+    <descope-wc 
+        project-id="P2o8wwgr3MQG4cddgAG0N3eQ5zDp" 
+        flow-id="sign-up-in-passwords">
+    </descope-wc>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const wcElement = document.querySelector('descope-wc');
+
+            // Ensure the Descope element is available
+            if (wcElement) {
+                // Redirect to the specified URL on successful authentication
+                const onAuthenticated = () => {
+                    window.location.replace('https://editor.weweb.io/510cc1ee-2bfc-4285-b320-8738a6ac29e0');
+                };
+
+                // Handle any errors encountered during login
+                const onError = (event) => {
+                    console.error('Login Error:', event.detail);
+                    alert('Login failed. Please try again.');
+                };
+
+                // Listen for authentication success and error events
+                wcElement.addEventListener('descope-authenticated', onAuthenticated);
+                wcElement.addEventListener('descope-error', onError);
+            } else {
+                console.error('Descope web component not found');
+            }
+        });
+    </script>
+
+</body>
+</html>
