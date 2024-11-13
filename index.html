@@ -19,15 +19,16 @@
 		}
 		if (!sessionToken || notValidToken) {
 			var container = document.getElementById('container');
-			container.innerHTML = '<descope-wc project-id="P2o8wwgr3MQG4cddgAG0N3eQ5zDp" flow-id="sign-up-or-in-otp"></descope-wc>';
+			container.innerHTML = '<descope-wc project-id="P2o8wwgr3MQG4cddgAG0N3eQ5zDp" flow-id="sign-up-in-passwords"></descope-wc>';
  
 			const wcElement = document.getElementsByTagName('descope-wc')[0];
 			const onSuccess = (e) => {
-				console.log(e.detail.user);
+				console.log("User successfully authenticated:", e.detail.user);
 				sdk.refresh();
-				window.location.replace("./loggedIn?userId=" + encodeURIComponent(e.detail.user.loginIds));
+				console.log("Redirecting to WeWeb...");
+				window.location.replace("https://editor.weweb.io/510cc1ee-2bfc-4285-b320-8738a6ac29e0?userId=" + encodeURIComponent(e.detail.user.loginIds));
 			};
-			const onError = (err) => console.log(err);
+			const onError = (err) => console.log("Authentication error:", err);
  
 			wcElement.addEventListener('success', onSuccess);
 			wcElement.addEventListener('error', onError);
