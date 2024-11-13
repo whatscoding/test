@@ -13,31 +13,22 @@
 		const sdk = Descope({ projectId: 'P2o8wwgr3MQG4cddgAG0N3eQ5zDp', persistTokens: true, autoRefresh: true });
  
 		const sessionToken = sdk.getSessionToken();
-		let notValidToken;
+		var notValidToken;
 		if (sessionToken) {
 			notValidToken = sdk.isJwtExpired(sessionToken);
 		}
 		if (!sessionToken || notValidToken) {
-			const container = document.getElementById('container');
+			var container = document.getElementById('container');
 			container.innerHTML = '<descope-wc project-id="P2o8wwgr3MQG4cddgAG0N3eQ5zDp" flow-id="sign-up-in-passwords"></descope-wc>';
  
 			const wcElement = document.getElementsByTagName('descope-wc')[0];
 			const onSuccess = (e) => {
-				console.log("Authentication successful:", e.detail.user);
-				console.log("Refreshing SDK session...");
+				console.log(e.detail.user);
 				sdk.refresh();
-				console.log("Redirecting to WeWeb page...");
-				setTimeout(() => {
-					window.location.href = "https://editor.weweb.io/510cc1ee-2bfc-4285-b320-8738a6ac29e0?userId=" + encodeURIComponent(e.detail.user.loginIds);
-				}, 500);
+				window.location.replace("./loggedIn?userId=" + encodeURIComponent(e.detail.user.loginIds));
 			};
-			const onError = (err) => console.log("Authentication error:", err);
-
-			// Debugging all Descope events
-			wcElement.addEventListener("descope-event", (event) => {
-				console.log("Descope event:", event.type, event.detail);
-			});
-
+			const onError = (err) => console.log(err);
+ 
 			wcElement.addEventListener('success', onSuccess);
 			wcElement.addEventListener('error', onError);
 		}
