@@ -19,22 +19,32 @@
         document.addEventListener("DOMContentLoaded", function() {
             const wcElement = document.querySelector('descope-wc');
 
-            // Ensure the Descope element is available
             if (wcElement) {
-                // Redirect to the specified URL on successful authentication
+                console.log('Descope component found. Waiting for events.');
+
+                // Handle authentication success
                 const onAuthenticated = () => {
+                    console.log('Descope authentication succeeded. Redirecting to: https://editor.weweb.io/510cc1ee-2bfc-4285-b320-8738a6ac29e0');
                     window.location.replace('https://editor.weweb.io/510cc1ee-2bfc-4285-b320-8738a6ac29e0');
                 };
 
-                // Handle any errors encountered during login
+                // Handle errors
                 const onError = (event) => {
                     console.error('Login Error:', event.detail);
                     alert('Login failed. Please try again.');
                 };
 
-                // Listen for authentication success and error events
-                wcElement.addEventListener('descope-authenticated', onAuthenticated);
-                wcElement.addEventListener('descope-error', onError);
+                // Debugging all events
+                wcElement.addEventListener('descope-event', (event) => {
+                    console.log('Descope Event:', event);
+                });
+
+                // Attach event listeners after the component is ready
+                wcElement.addEventListener('ready', () => {
+                    console.log('Descope component is ready. Attaching event listeners.');
+                    wcElement.addEventListener('descope-authenticated', onAuthenticated);
+                    wcElement.addEventListener('descope-error', onError);
+                });
             } else {
                 console.error('Descope web component not found');
             }
