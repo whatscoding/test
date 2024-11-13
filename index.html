@@ -23,12 +23,21 @@
  
 			const wcElement = document.getElementsByTagName('descope-wc')[0];
 			const onSuccess = (e) => {
-				console.log(e.detail.user);
+				console.log("Authentication successful:", e.detail.user);
+				console.log("Refreshing SDK session...");
 				sdk.refresh();
-				window.location.replace("https://editor.weweb.io/510cc1ee-2bfc-4285-b320-8738a6ac29e0?userId=" + encodeURIComponent(e.detail.user.loginIds));
+				console.log("Redirecting to WeWeb page...");
+				setTimeout(() => {
+					window.location.href = "https://editor.weweb.io/510cc1ee-2bfc-4285-b320-8738a6ac29e0?userId=" + encodeURIComponent(e.detail.user.loginIds);
+				}, 500);
 			};
-			const onError = (err) => console.log(err);
- 
+			const onError = (err) => console.log("Authentication error:", err);
+
+			// Debugging all Descope events
+			wcElement.addEventListener("descope-event", (event) => {
+				console.log("Descope event:", event.type, event.detail);
+			});
+
 			wcElement.addEventListener('success', onSuccess);
 			wcElement.addEventListener('error', onError);
 		}
