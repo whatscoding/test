@@ -1,38 +1,269 @@
 <!DOCTYPE html>
-<html>
-  <head>
-	<script src="https://unpkg.com/@descope/web-component@3.21.0/dist/index.js"></script>
-	<script src="https://unpkg.com/@descope/web-js-sdk@1.16.0/dist/index.umd.js"></script>
-  </head>
- 
-  <body>
-	<h1>Log In With Descope Flows</h1>
-    <p id="container"></p>
- 
-	<script>
-		const sdk = Descope({ projectId: 'P2o8wwgr3MQG4cddgAG0N3eQ5zDp', persistTokens: true, autoRefresh: true });
- 
-		const sessionToken = sdk.getSessionToken();
-		var notValidToken;
-		if (sessionToken) {
-			notValidToken = sdk.isJwtExpired(sessionToken);
-		}
-		if (!sessionToken || notValidToken) {
-			var container = document.getElementById('container');
-			container.innerHTML = '<descope-wc project-id="P2o8wwgr3MQG4cddgAG0N3eQ5zDp" flow-id="sign-up-in-passwords"></descope-wc>';
- 
-			const wcElement = document.getElementsByTagName('descope-wc')[0];
-			const onSuccess = (e) => {
-				console.log("User successfully authenticated:", e.detail.user);
-				sdk.refresh();
-				console.log("Redirecting to WeWeb...");
-				window.location.replace("https://editor.weweb.io/510cc1ee-2bfc-4285-b320-8738a6ac29e0?userId=" + encodeURIComponent(e.detail.user.loginIds));
-			};
-			const onError = (err) => console.log("Authentication error:", err);
- 
-			wcElement.addEventListener('success', onSuccess);
-			wcElement.addEventListener('error', onError);
-		}
-	</script>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dental Voice AI Cost Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .calculator {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px 40px 40px 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .input-section {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .input-section input {
+            width: 150px;
+            padding: 10px;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #aaa;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #ddd;
+        }
+        .sub-component {
+            padding-left: 20px;
+            background-color: #f9f9f9;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #e2e2e2;
+        }
+        @media (max-width: 600px) {
+            .calculator {
+                padding: 10px 20px 20px 20px;
+            }
+            .input-section input {
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Dental Voice AI Cost Calculator</h1>
+        <div class="input-section">
+            <label for="customers"><strong>Number of Customers:</strong></label>
+            <input type="number" id="customers" name="customers" min="1" value="10">
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Cost (USD)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Twilio Costs -->
+                <tr>
+                    <td><strong>Twilio</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="sub-component">- Phone Numbers</td>
+                    <td id="twilio-phone-numbers">$10.00</td>
+                </tr>
+                <tr>
+                    <td class="sub-component">- Inbound Call Charges</td>
+                    <td id="twilio-inbound">$34.00</td>
+                </tr>
+                <tr class="total-row">
+                    <td><strong>Total Twilio Cost</strong></td>
+                    <td id="twilio-total">$44.00</td>
+                </tr>
+                
+                <!-- OpenAI GPT-4o Costs -->
+                <tr>
+                    <td><strong>OpenAI GPT-4o</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="sub-component">- GPT-4o Processing (Text Input)</td>
+                    <td id="openai-text-input">$6.25</td>
+                </tr>
+                <tr>
+                    <td class="sub-component">- Whisper Transcription (Audio Input)</td>
+                    <td id="openai-audio-input">$300.00</td>
+                </tr>
+                <tr>
+                    <td class="sub-component">- GPT-4o Output (Text Output)</td>
+                    <td id="openai-text-output">$25.00</td>
+                </tr>
+                <tr class="total-row">
+                    <td><strong>Total OpenAI GPT-4o Cost</strong></td>
+                    <td id="openai-total">$331.25</td>
+                </tr>
+                
+                <!-- System Integration Costs -->
+                <tr>
+                    <td><strong>System Integration</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="sub-component">- API Calls</td>
+                    <td id="system-integration">$200.00</td>
+                </tr>
+                <tr class="total-row">
+                    <td><strong>Total System Integration Cost</strong></td>
+                    <td id="system-integration-total">$200.00</td>
+                </tr>
+                
+                <!-- Azure Cloud Services Costs -->
+                <tr>
+                    <td><strong>Azure Cloud Services</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="sub-component">- Compute (Azure Functions)</td>
+                    <td id="azure-compute">$125.00</td>
+                </tr>
+                <tr>
+                    <td class="sub-component">- Database Services</td>
+                    <td id="azure-database">$5.00</td>
+                </tr>
+                <tr>
+                    <td class="sub-component">- Storage Services</td>
+                    <td id="azure-storage">$10.00</td>
+                </tr>
+                <tr>
+                    <td class="sub-component">- Miscellaneous (Networking, Monitoring)</td>
+                    <td id="azure-misc">$10.00</td>
+                </tr>
+                <tr class="total-row">
+                    <td><strong>Total Azure Cost</strong></td>
+                    <td id="azure-total">$150.00</td>
+                </tr>
+                
+                <!-- Additional Costs -->
+                <tr>
+                    <td><strong>Additional Costs</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="sub-component">- Miscellaneous Services (Monitoring, Logging)</td>
+                    <td id="additional-costs">$100.00</td>
+                </tr>
+                <tr class="total-row">
+                    <td><strong>Total Additional Costs</strong></td>
+                    <td id="additional-total">$100.00</td>
+                </tr>
+                
+                <!-- Grand Total -->
+                <tr class="total-row">
+                    <td><strong>Total Estimated Cost</strong></td>
+                    <td id="grand-total">$825.25</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        // Function to format numbers as USD currency
+        function formatCurrency(amount) {
+            return `$${amount.toFixed(2)}`;
+        }
+
+        document.getElementById('customers').addEventListener('input', function() {
+            const customers = parseInt(this.value);
+            if (isNaN(customers) || customers < 1) {
+                alert("Please enter a valid number of customers (minimum 1).");
+                return;
+            }
+
+            // Twilio Costs
+            const twilioPhoneNumbers = customers * 1.00;
+            const totalCalls = customers * 200;
+            const totalCallMinutes = totalCalls * 2;
+            const twilioInbound = totalCallMinutes * 0.0085;
+            const twilioTotal = twilioPhoneNumbers + twilioInbound;
+
+            document.getElementById('twilio-phone-numbers').textContent = formatCurrency(twilioPhoneNumbers);
+            document.getElementById('twilio-inbound').textContent = formatCurrency(twilioInbound);
+            document.getElementById('twilio-total').textContent = formatCurrency(twilioTotal);
+
+            // OpenAI GPT-4o Costs
+            const gptTextInputTokens = customers * 200 * 625;
+            const gptTextInputCost = (gptTextInputTokens / 1000000) * 5.00;
+
+            const whisperAudioInputTokens = customers * 200 * 1500;
+            const whisperAudioInputCost = (whisperAudioInputTokens / 1000000) * 100.00;
+
+            const gptTextOutputTokens = customers * 200 * 625;
+            const gptTextOutputCost = (gptTextOutputTokens / 1000000) * 20.00;
+
+            const openaiTotal = gptTextInputCost + whisperAudioInputCost + gptTextOutputCost;
+
+            document.getElementById('openai-text-input').textContent = formatCurrency(gptTextInputCost);
+            document.getElementById('openai-audio-input').textContent = formatCurrency(whisperAudioInputCost);
+            document.getElementById('openai-text-output').textContent = formatCurrency(gptTextOutputCost);
+            document.getElementById('openai-total').textContent = formatCurrency(openaiTotal);
+
+            // System Integration Costs
+            const apiCallsCost = totalCalls * 0.10;
+            const systemIntegrationTotal = apiCallsCost;
+
+            document.getElementById('system-integration').textContent = formatCurrency(apiCallsCost);
+            document.getElementById('system-integration-total').textContent = formatCurrency(systemIntegrationTotal);
+
+            // Azure Cloud Services Costs
+            let azureComputeCost = 0;
+            if (customers <= 10) {
+                azureComputeCost = 26.00;
+            } else if (customers <= 100) {
+                azureComputeCost = 125.00;
+            } else if (customers <= 1000) {
+                azureComputeCost = 525.00;
+            } else {
+                azureComputeCost = 2100.00;
+            }
+
+            const azureDatabase = 5.00;
+            const azureStorage = 10.00;
+            const azureMisc = 10.00;
+            const azureTotal = azureComputeCost + azureDatabase + azureStorage + azureMisc;
+
+            document.getElementById('azure-compute').textContent = formatCurrency(azureComputeCost);
+            document.getElementById('azure-database').textContent = formatCurrency(azureDatabase);
+            document.getElementById('azure-storage').textContent = formatCurrency(azureStorage);
+            document.getElementById('azure-misc').textContent = formatCurrency(azureMisc);
+            document.getElementById('azure-total').textContent = formatCurrency(azureTotal);
+
+            // Additional Costs
+            const additionalCosts = customers * 10.00;
+            document.getElementById('additional-costs').textContent = formatCurrency(additionalCosts);
+            document.getElementById('additional-total').textContent = formatCurrency(additionalCosts);
+
+            // Grand Total
+            const grandTotal = twilioTotal + openaiTotal + systemIntegrationTotal + azureTotal + additionalCosts;
+            document.getElementById('grand-total').textContent = formatCurrency(grandTotal);
+        });
+
+        // Initialize with default value
+        document.getElementById('customers').dispatchEvent(new Event('input'));
+    </script>
+</body>
 </html>
